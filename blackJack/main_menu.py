@@ -3,9 +3,9 @@ import pygame
 from constants import *
 
 
-class MenuButtons:
+class MenuButtonRects:
     """
-    Class to store the menu buttons.
+    Class to store the menu buttons rects.
     rect1: Single Player button rect
     rect2: Multiplayer button rect
     rect3: Settings button rect
@@ -33,7 +33,7 @@ class MenuButtons:
 
 def draw_main_menu(
     screen: pygame.Surface,
-) -> MenuButtons:
+) -> MenuButtonRects:
     """
     Draw the main menu.
     """
@@ -111,7 +111,7 @@ def draw_main_menu(
     )  # White border
     screen.blit(settings_button_text, settings_button_text_rect)
 
-    return MenuButtons(
+    return MenuButtonRects(
         single_player_button_rect,
         multiplayer_button_rect,
         settings_button_rect,
@@ -120,7 +120,7 @@ def draw_main_menu(
 
 def handle_main_menu_events(
     states: dict[str, bool],
-    menu_buttons: MenuButtons,
+    menu_buttons: MenuButtonRects,
 ) -> dict[str, bool]:
     """
     Handle main menu events.

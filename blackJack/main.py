@@ -40,8 +40,8 @@ def main() -> None:
         # Render
         match states:
             case {"main_menu": True}:
-                menu_buttons: MenuButtons = draw_main_menu(screen)
-                states = handle_main_menu_events(states, menu_buttons)
+                menu_button_rects: MenuButtonRects = draw_main_menu(screen)
+                states = handle_main_menu_events(states, menu_button_rects)
             case {"single_player": True}:
                 print("single_player")
                 # draw_single_player(screen)

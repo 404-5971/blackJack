@@ -3,9 +3,37 @@ import pygame
 from constants import *
 
 
+class MenuButtons:
+    """
+    Class to store the menu buttons.
+    rect1: Single Player button rect
+    rect2: Multiplayer button rect
+    rect3: Settings button rect
+    """
+
+    def __init__(
+        self,
+        rect1: pygame.Rect,
+        rect2: pygame.Rect,
+        rect3: pygame.Rect,
+    ):
+        if not all(
+            isinstance(r, pygame.Rect)
+            for r in [
+                rect1,
+                rect2,
+                rect3,
+            ]
+        ):
+            raise TypeError("All arguments must be pygame.Rect objects.")
+        self.single_player_button_rect = rect1
+        self.multiplayer_button_rect = rect2
+        self.settings_button_rect = rect3
+
+
 def draw_main_menu(
     screen: pygame.Surface,
-) -> dict[str, pygame.Rect]:
+) -> MenuButtons:
     """
     Draw the main menu.
     """
@@ -83,30 +111,28 @@ def draw_main_menu(
     )  # White border
     screen.blit(settings_button_text, settings_button_text_rect)
 
-    return {
-        "single_player_button_rect": single_player_button_rect,
-        "multiplayer_button_rect": multiplayer_button_rect,
-        "settings_button_rect": settings_button_rect,
-    }
+    return MenuButtons(
+        single_player_button_rect,
+        multiplayer_button_rect,
+        settings_button_rect,
+    )
 
 
 def handle_main_menu_events(
     states: dict[str, bool],
-    single_player_button_rect: pygame.Rect,
-    multiplayer_button_rect: pygame.Rect,
-    settings_button_rect: pygame.Rect,
+    menu_buttons: MenuButtons,
 ) -> dict[str, bool]:
     """
     Handle main menu events.
     """
     if pygame.mouse.get_pressed()[0]:
-        if single_player_button_rect.collidepoint(pygame.mouse.get_pos()):
+        if menu_buttons.single_player_button_rect.collidepoint(pygame.mouse.get_pos()):
             states["main_menu"] = False
             states["single_player"] = True
-        elif multiplayer_button_rect.collidepoint(pygame.mouse.get_pos()):
+        elif menu_buttons.multiplayer_button_rect.collidepoint(pygame.mouse.get_pos()):
             states["main_menu"] = False
             states["multiplayer"] = True
-        elif settings_button_rect.collidepoint(pygame.mouse.get_pos()):
+        elif menu_buttons.settings_button_rect.collidepoint(pygame.mouse.get_pos()):
             states["main_menu"] = False
             states["settings"] = True
 

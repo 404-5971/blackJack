@@ -5,9 +5,13 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "black>=25.1.0",
     "pygame>=2.6.1",
 ]
 
 [tool.setuptools]
 packages = ["blackJack"]
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+]

@@ -27,15 +27,19 @@ name = "blackjack"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "black" },
     { name = "pygame" },
 ]
 
-[package.metadata]
-requires-dist = [
-    { name = "black", specifier = ">=25.1.0" },
-    { name = "pygame", specifier = ">=2.6.1" },
+[package.dev-dependencies]
+dev = [
+    { name = "black" },
 ]
+
+[package.metadata]
+requires-dist = [{ name = "pygame", specifier = ">=2.6.1" }]
+
+[package.metadata.requires-dev]
+dev = [{ name = "black", specifier = ">=25.1.0" }]
 
 [[package]]
 name = "click"

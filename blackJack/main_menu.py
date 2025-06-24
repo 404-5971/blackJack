@@ -5,7 +5,7 @@ from constants import *
 
 def draw_main_menu(
     screen: pygame.Surface,
-) -> tuple[pygame.Rect, pygame.Rect, pygame.Rect]:
+) -> dict[str, pygame.Rect]:
     """
     Draw the main menu.
     """
@@ -83,11 +83,11 @@ def draw_main_menu(
     )  # White border
     screen.blit(settings_button_text, settings_button_text_rect)
 
-    return (
-        single_player_button_rect,
-        multiplayer_button_rect,
-        settings_button_rect,
-    )
+    return {
+        "single_player_button_rect": single_player_button_rect,
+        "multiplayer_button_rect": multiplayer_button_rect,
+        "settings_button_rect": settings_button_rect,
+    }
 
 
 def handle_main_menu_events(

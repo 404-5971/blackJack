@@ -40,17 +40,8 @@ def main() -> None:
         # Render
         match states:
             case {"main_menu": True}:
-                (
-                    single_player_button_rect,
-                    multiplayer_button_rect,
-                    settings_button_rect,
-                ) = draw_main_menu(screen)
-                states = handle_main_menu_events(
-                    states,
-                    single_player_button_rect,
-                    multiplayer_button_rect,
-                    settings_button_rect,
-                )
+                menu_buttons: dict[str, pygame.Rect] = draw_main_menu(screen)
+                states = handle_main_menu_events(states, **menu_buttons)
             case {"single_player": True}:
                 print("single_player")
                 # draw_single_player(screen)

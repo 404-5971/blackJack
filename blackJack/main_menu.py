@@ -9,6 +9,7 @@ _key_states: dict[int, bool] = {
     pygame.K_DOWN: False,
     pygame.K_j: False,
     pygame.K_k: False,
+    pygame.K_RETURN: False,
 }
 
 
@@ -137,10 +138,27 @@ def handle_main_menu_events(
         _key_states[pygame.K_k] = True
         pointer_pos = move_pointer(pointer_pos, "up")
 
+    # enter / return
+    elif keys[pygame.K_RETURN] and not _key_states[pygame.K_RETURN]:
+        _key_states[pygame.K_RETURN] = True
+        match pointer_pos:
+            case 0:
+                states["main_menu"] = False
+                states["single_player"] = True
+            case 1:
+                states["main_menu"] = False
+                states["multiplayer"] = True
+            case 2:
+                states["main_menu"] = False
+                states["settings"] = True
+            case _:
+                raise ValueError("Pointer position must be 0, 1, or 2.")
+
     _key_states[pygame.K_UP] = keys[pygame.K_UP]
     _key_states[pygame.K_DOWN] = keys[pygame.K_DOWN]
     _key_states[pygame.K_j] = keys[pygame.K_j]
     _key_states[pygame.K_k] = keys[pygame.K_k]
+    _key_states[pygame.K_RETURN] = keys[pygame.K_RETURN]
 
     if pygame.mouse.get_pressed()[0]:
         if main_menu_obj.single_player_button_rect.collidepoint(pygame.mouse.get_pos()):

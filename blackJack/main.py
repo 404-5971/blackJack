@@ -45,6 +45,7 @@ def main() -> None:
                 states, main_menu_obj, pointer_pos = handle_main_menu_events(
                     states, screen, pointer_pos
                 )
+                # print(pointer_pos)
                 draw_main_menu(screen, main_menu_obj, pointer_pos)
             case {"single_player": True}:
                 print("single_player")

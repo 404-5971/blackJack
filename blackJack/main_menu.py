@@ -1,6 +1,10 @@
 import pygame
+from pygame.key import ScancodeWrapper
 
 from constants import *
+
+# Global key states to track key presses across function calls
+_key_states: dict[int, bool] = {pygame.K_UP: False, pygame.K_DOWN: False}
 
 
 class MainMenu:
@@ -85,20 +89,26 @@ def handle_main_menu_events(
     - main_menu_obj: MainMenu
     """
 
+    global _key_states
+
     # Create main menu object
     main_menu_obj: MainMenu = update_main_menu_obj(screen)
 
-    if any(pygame.key.get_pressed()):
-        if pygame.key.get_pressed()[pygame.K_UP]:
-            if pointer_pos > 0:
-                pointer_pos -= 1
-            else:
-                pointer_pos = 2
-        elif pygame.key.get_pressed()[pygame.K_DOWN]:
-            if pointer_pos < 2:
-                pointer_pos += 1
-            else:
-                pointer_pos = 0
+    keys: ScancodeWrapper = pygame.key.get_pressed()
+    if keys[pygame.K_UP] and not _key_states[pygame.K_UP]:
+        _key_states[pygame.K_UP] = True
+        if pointer_pos > 0:
+            pointer_pos -= 1
+        else:
+            pointer_pos = 2
+    elif keys[pygame.K_DOWN] and not _key_states[pygame.K_DOWN]:
+        _key_states[pygame.K_DOWN] = True
+        if pointer_pos < 2:
+            pointer_pos += 1
+        else:
+            pointer_pos = 0
+    _key_states[pygame.K_UP] = keys[pygame.K_UP]
+    _key_states[pygame.K_DOWN] = keys[pygame.K_DOWN]
 
     if pygame.mouse.get_pressed()[0]:
         if main_menu_obj.single_player_button_rect.collidepoint(pygame.mouse.get_pos()):

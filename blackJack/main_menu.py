@@ -4,7 +4,12 @@ from pygame.key import ScancodeWrapper
 from constants import *
 
 # Global key states to track key presses across function calls
-_key_states: dict[int, bool] = {pygame.K_UP: False, pygame.K_DOWN: False}
+_key_states: dict[int, bool] = {
+    pygame.K_UP: False,
+    pygame.K_DOWN: False,
+    pygame.K_j: False,
+    pygame.K_k: False,
+}
 
 
 class MainMenu:
@@ -94,21 +99,48 @@ def handle_main_menu_events(
     # Create main menu object
     main_menu_obj: MainMenu = update_main_menu_obj(screen)
 
+    def move_pointer(pointer_pos: int, direction: str) -> int:
+        if direction == "up":
+            if pointer_pos > 0:
+                pointer_pos -= 1
+            else:
+                pointer_pos = 2
+            return pointer_pos
+        elif direction == "down":
+            if pointer_pos < 2:
+                pointer_pos += 1
+            else:
+                pointer_pos = 0
+            return pointer_pos
+        else:
+            raise ValueError("Direction must be 'up' or 'down'.")
+
     keys: ScancodeWrapper = pygame.key.get_pressed()
+
+    # Up arrow
     if keys[pygame.K_UP] and not _key_states[pygame.K_UP]:
         _key_states[pygame.K_UP] = True
-        if pointer_pos > 0:
-            pointer_pos -= 1
-        else:
-            pointer_pos = 2
+        pointer_pos = move_pointer(pointer_pos, "up")
+
+    # Down arrow
     elif keys[pygame.K_DOWN] and not _key_states[pygame.K_DOWN]:
         _key_states[pygame.K_DOWN] = True
-        if pointer_pos < 2:
-            pointer_pos += 1
-        else:
-            pointer_pos = 0
+        pointer_pos = move_pointer(pointer_pos, "down")
+
+    # j (vim down)
+    elif keys[pygame.K_j] and not _key_states[pygame.K_j]:
+        _key_states[pygame.K_j] = True
+        pointer_pos = move_pointer(pointer_pos, "down")
+
+    # k (vim up)
+    elif keys[pygame.K_k] and not _key_states[pygame.K_k]:
+        _key_states[pygame.K_k] = True
+        pointer_pos = move_pointer(pointer_pos, "up")
+
     _key_states[pygame.K_UP] = keys[pygame.K_UP]
     _key_states[pygame.K_DOWN] = keys[pygame.K_DOWN]
+    _key_states[pygame.K_j] = keys[pygame.K_j]
+    _key_states[pygame.K_k] = keys[pygame.K_k]
 
     if pygame.mouse.get_pressed()[0]:
         if main_menu_obj.single_player_button_rect.collidepoint(pygame.mouse.get_pos()):

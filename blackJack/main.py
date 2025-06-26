@@ -26,6 +26,8 @@ def main() -> None:
         "settings": False,
     }
 
+    pointer_pos: int = 0
+
     while running:
         # Handle events
         new_fullscreen: bool
@@ -40,8 +42,10 @@ def main() -> None:
         # Render
         match states:
             case {"main_menu": True}:
-                menu_button_rects: MenuButtonRects = draw_main_menu(screen)
-                states = handle_main_menu_events(states, menu_button_rects)
+                states, main_menu_obj, pointer_pos = handle_main_menu_events(
+                    states, screen, pointer_pos
+                )
+                draw_main_menu(screen, main_menu_obj, pointer_pos)
             case {"single_player": True}:
                 print("single_player")
                 # draw_single_player(screen)

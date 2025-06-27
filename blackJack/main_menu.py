@@ -243,17 +243,11 @@ def draw_main_menu(
     screen.blit(settings_button_text, settings_button_text_rect)
 
     def draw_pointer(button_rect: pygame.Rect) -> tuple[pygame.Surface, pygame.Rect]:
-        pointer_width: int
-        pointer_height: int
-        pointer_x: int
-        pointer_y: int
-        pointer_surface: pygame.Surface
-        pointer_rect: pygame.Rect
-        pointer_width = button_rect.width // 3
-        pointer_height = button_rect.height // 3
-        pointer_x = int(button_rect.x - pointer_width * 1.1)
-        pointer_y = button_rect.y + button_rect.height // 2 - pointer_height // 2
-        pointer_surface = pygame.Surface(
+        pointer_width: int = button_rect.width // 3
+        pointer_height: int = button_rect.height // 3
+        pointer_x: int = int(button_rect.x - pointer_width * 1.1)
+        pointer_y: int = button_rect.y + button_rect.height // 2 - pointer_height // 2
+        pointer_surface: pygame.Surface = pygame.Surface(
             (pointer_width, pointer_height), pygame.SRCALPHA
         )
         pygame.draw.polygon(
@@ -261,7 +255,7 @@ def draw_main_menu(
             COLOR_BUTTON_HOVER,
             [(0, 0), (pointer_width, pointer_height // 2), (0, pointer_height)],
         )
-        pointer_rect = pointer_surface.get_rect(
+        pointer_rect: pygame.Rect = pointer_surface.get_rect(
             center=(pointer_x + pointer_width // 2, pointer_y + pointer_height // 2)
         )
         return pointer_surface, pointer_rect

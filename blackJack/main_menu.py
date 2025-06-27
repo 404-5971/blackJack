@@ -19,6 +19,7 @@ class MainMenu:
     rect1: Single Player button rect
     rect2: Multiplayer button rect
     rect3: Settings button rect
+    rect4: Quit button rect
     """
 
     def __init__(
@@ -26,6 +27,7 @@ class MainMenu:
         rect1: pygame.Rect,
         rect2: pygame.Rect,
         rect3: pygame.Rect,
+        rect4: pygame.Rect,
     ):
         if not all(
             isinstance(r, pygame.Rect)
@@ -33,12 +35,14 @@ class MainMenu:
                 rect1,
                 rect2,
                 rect3,
+                rect4,
             ]
         ):
             raise TypeError("All arguments must be pygame.Rect objects.")
         self.single_player_button_rect = rect1
         self.multiplayer_button_rect = rect2
         self.settings_button_rect = rect3
+        self.quit_button_rect = rect4
 
 
 def update_main_menu_obj(screen: pygame.Surface) -> MainMenu:
@@ -52,8 +56,8 @@ def update_main_menu_obj(screen: pygame.Surface) -> MainMenu:
     button_height: int = screen_height // 5
     button_width: int = int(button_height * 16 / 9)
 
-    third_of_screen_height: int = screen_height // 3
-    offset: int = (third_of_screen_height - button_height) // 2
+    fourth_of_screen_height: int = screen_height // 4
+    offset: int = (fourth_of_screen_height - button_height) // 2
 
     # Draw buttons - center each button in its respective third
     # First third (top)
@@ -63,23 +67,32 @@ def update_main_menu_obj(screen: pygame.Surface) -> MainMenu:
         single_player_button_x, single_player_button_y, button_width, button_height
     )
 
+    # Second third (middle top)
     multiplayer_button_x: int = (screen_width - button_width) // 2
-    multiplayer_button_y: int = third_of_screen_height + offset
+    multiplayer_button_y: int = fourth_of_screen_height + offset
     multiplayer_button_rect: pygame.Rect = pygame.Rect(
         multiplayer_button_x, multiplayer_button_y, button_width, button_height
     )
 
-    # Third third (bottom)
+    # Third third (middle bottom)
     settings_button_x: int = (screen_width - button_width) // 2
-    settings_button_y: int = third_of_screen_height * 2 + offset
+    settings_button_y: int = fourth_of_screen_height * 2 + offset
     settings_button_rect: pygame.Rect = pygame.Rect(
         settings_button_x, settings_button_y, button_width, button_height
+    )
+
+    # Fourth third (bottom)
+    quit_button_x: int = (screen_width - button_width) // 2
+    quit_button_y: int = fourth_of_screen_height * 3 + offset
+    quit_button_rect: pygame.Rect = pygame.Rect(
+        quit_button_x, quit_button_y, button_width, button_height
     )
 
     return MainMenu(
         single_player_button_rect,
         multiplayer_button_rect,
         settings_button_rect,
+        quit_button_rect,
     )
 
 
@@ -105,10 +118,10 @@ def handle_main_menu_events(
             if pointer_pos > 0:
                 pointer_pos -= 1
             else:
-                pointer_pos = 2
+                pointer_pos = 3
             return pointer_pos
         elif direction == "down":
-            if pointer_pos < 2:
+            if pointer_pos < 3:
                 pointer_pos += 1
             else:
                 pointer_pos = 0
@@ -151,8 +164,11 @@ def handle_main_menu_events(
             case 2:
                 states["main_menu"] = False
                 states["settings"] = True
+            case 3:
+                states["main_menu"] = False
+                states["quit"] = True
             case _:
-                raise ValueError("Pointer position must be 0, 1, or 2.")
+                raise ValueError("Pointer position must be 0, 1, 2, or 3.")
 
     _key_states[pygame.K_UP] = keys[pygame.K_UP]
     _key_states[pygame.K_DOWN] = keys[pygame.K_DOWN]
@@ -170,6 +186,9 @@ def handle_main_menu_events(
         elif main_menu_obj.settings_button_rect.collidepoint(pygame.mouse.get_pos()):
             states["main_menu"] = False
             states["settings"] = True
+        elif main_menu_obj.quit_button_rect.collidepoint(pygame.mouse.get_pos()):
+            states["main_menu"] = False
+            states["quit"] = True
 
     return states, main_menu_obj, pointer_pos
 
@@ -187,6 +206,7 @@ def draw_main_menu(
         "DejaVu Sans", main_menu_obj.single_player_button_rect.width // 7
     )
 
+    # First (top)
     single_player_button_text: pygame.Surface = buttonFont.render(
         "Single Player", True, COLOR_BUTTON_TEXT
     )
@@ -205,7 +225,7 @@ def draw_main_menu(
     )  # White border
     screen.blit(single_player_button_text, single_player_button_text_rect)
 
-    # Second third (middle)
+    # Second (middle top)
     multiplayer_button_text: pygame.Surface = buttonFont.render(
         "Multiplayer", True, COLOR_BUTTON_TEXT
     )
@@ -224,6 +244,7 @@ def draw_main_menu(
     )  # White border
     screen.blit(multiplayer_button_text, multiplayer_button_text_rect)
 
+    # Third (middle bottom)
     settings_button_text: pygame.Surface = buttonFont.render(
         "Settings", True, COLOR_BUTTON_TEXT
     )
@@ -241,6 +262,23 @@ def draw_main_menu(
         screen, COLOR_BUTTON_HOVER, main_menu_obj.settings_button_rect, 2
     )  # White border
     screen.blit(settings_button_text, settings_button_text_rect)
+
+    # Fourth (bottom)
+    quit_button_text: pygame.Surface = buttonFont.render(
+        "Quit", True, COLOR_BUTTON_TEXT
+    )
+    quit_button_text_rect: pygame.Rect = quit_button_text.get_rect()
+    quit_button_text_rect.center = (
+        main_menu_obj.quit_button_rect.x + main_menu_obj.quit_button_rect.width // 2,
+        main_menu_obj.quit_button_rect.y + main_menu_obj.quit_button_rect.height // 2,
+    )
+    pygame.draw.rect(
+        screen, COLOR_BUTTON, main_menu_obj.quit_button_rect
+    )  # Gray button
+    pygame.draw.rect(
+        screen, COLOR_BUTTON_HOVER, main_menu_obj.quit_button_rect, 2
+    )  # White border
+    screen.blit(quit_button_text, quit_button_text_rect)
 
     def draw_pointer(button_rect: pygame.Rect) -> tuple[pygame.Surface, pygame.Rect]:
         pointer_width: int = button_rect.width // 3
@@ -274,7 +312,9 @@ def draw_main_menu(
             pointer_surface, pointer_rect = draw_pointer(
                 main_menu_obj.settings_button_rect
             )
+        case 3:
+            pointer_surface, pointer_rect = draw_pointer(main_menu_obj.quit_button_rect)
         case _:
-            raise ValueError("Pointer position must be 0, 1, or 2.")
+            raise ValueError("Pointer position must be 0, 1, 2, or 3.")
 
     screen.blit(pointer_surface, pointer_rect)

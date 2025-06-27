@@ -24,6 +24,7 @@ def main() -> None:
         "single_player": False,
         "multiplayer": False,
         "settings": False,
+        "quit": False,
     }
 
     pointer_pos: int = 0
@@ -62,6 +63,8 @@ def main() -> None:
                 # draw_settings(screen)
                 # states = handle_settings_events(states)
                 pass
+            case {"quit": True}:
+                running = False
 
         # Update display
         pygame.display.flip()

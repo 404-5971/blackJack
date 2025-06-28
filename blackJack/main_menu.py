@@ -13,7 +13,7 @@ _key_states: dict[int, bool] = {
 }
 
 
-class MainMenu:
+class MainMenuButtonRects:
     """
     Class to store the menu buttons rects.
     rect1: Single Player button rect
@@ -45,9 +45,9 @@ class MainMenu:
         self.quit_button_rect = rect4
 
 
-def update_main_menu_obj(screen: pygame.Surface) -> MainMenu:
+def update_main_menu_button_rects(screen: pygame.Surface) -> MainMenuButtonRects:
     """
-    Create a main menu object.
+    Create a main menu button rects object.
     """
     # Get screen dimensions
     screen_width, screen_height = screen.get_size()
@@ -88,7 +88,7 @@ def update_main_menu_obj(screen: pygame.Surface) -> MainMenu:
         quit_button_x, quit_button_y, button_width, button_height
     )
 
-    return MainMenu(
+    return MainMenuButtonRects(
         single_player_button_rect,
         multiplayer_button_rect,
         settings_button_rect,
@@ -100,7 +100,7 @@ def handle_main_menu_events(
     states: dict[str, bool],
     screen: pygame.Surface,
     pointer_pos: int,
-) -> tuple[dict[str, bool], MainMenu, int]:
+) -> tuple[dict[str, bool], MainMenuButtonRects, int]:
     """
     Handle main menu events. \n
     Returns tuple[dict[str, bool], MainMenu]:
@@ -111,7 +111,7 @@ def handle_main_menu_events(
     global _key_states
 
     # Create main menu object
-    main_menu_obj: MainMenu = update_main_menu_obj(screen)
+    main_menu_obj: MainMenuButtonRects = update_main_menu_button_rects(screen)
 
     def move_pointer(pointer_pos: int, direction: str) -> int:
         if direction == "up":
@@ -195,7 +195,7 @@ def handle_main_menu_events(
 
 def draw_main_menu(
     screen: pygame.Surface,
-    main_menu_obj: MainMenu,
+    main_menu_button_rects_obj: MainMenuButtonRects,
     pointer_pos: int,
 ) -> None:
     """
@@ -203,7 +203,7 @@ def draw_main_menu(
     """
 
     buttonFont: pygame.font.Font = pygame.font.SysFont(
-        "DejaVu Sans", main_menu_obj.single_player_button_rect.width // 7
+        "DejaVu Sans", main_menu_button_rects_obj.single_player_button_rect.width // 7
     )
 
     # First (top)
@@ -212,16 +212,16 @@ def draw_main_menu(
     )
     single_player_button_text_rect: pygame.Rect = single_player_button_text.get_rect()
     single_player_button_text_rect.center = (
-        main_menu_obj.single_player_button_rect.x
-        + main_menu_obj.single_player_button_rect.width // 2,
-        main_menu_obj.single_player_button_rect.y
-        + main_menu_obj.single_player_button_rect.height // 2,
+        main_menu_button_rects_obj.single_player_button_rect.x
+        + main_menu_button_rects_obj.single_player_button_rect.width // 2,
+        main_menu_button_rects_obj.single_player_button_rect.y
+        + main_menu_button_rects_obj.single_player_button_rect.height // 2,
     )
     pygame.draw.rect(
-        screen, COLOR_BUTTON, main_menu_obj.single_player_button_rect
+        screen, COLOR_BUTTON, main_menu_button_rects_obj.single_player_button_rect
     )  # Gray button
     pygame.draw.rect(
-        screen, COLOR_BUTTON_HOVER, main_menu_obj.single_player_button_rect, 2
+        screen, COLOR_BUTTON_HOVER, main_menu_button_rects_obj.single_player_button_rect, 2
     )  # White border
     screen.blit(single_player_button_text, single_player_button_text_rect)
 
@@ -231,16 +231,16 @@ def draw_main_menu(
     )
     multiplayer_button_text_rect: pygame.Rect = multiplayer_button_text.get_rect()
     multiplayer_button_text_rect.center = (
-        main_menu_obj.multiplayer_button_rect.x
-        + main_menu_obj.multiplayer_button_rect.width // 2,
-        main_menu_obj.multiplayer_button_rect.y
-        + main_menu_obj.multiplayer_button_rect.height // 2,
+        main_menu_button_rects_obj.multiplayer_button_rect.x
+        + main_menu_button_rects_obj.multiplayer_button_rect.width // 2,
+        main_menu_button_rects_obj.multiplayer_button_rect.y
+        + main_menu_button_rects_obj.multiplayer_button_rect.height // 2,
     )
     pygame.draw.rect(
-        screen, COLOR_BUTTON, main_menu_obj.multiplayer_button_rect
+        screen, COLOR_BUTTON, main_menu_button_rects_obj.multiplayer_button_rect
     )  # Gray button
     pygame.draw.rect(
-        screen, COLOR_BUTTON_HOVER, main_menu_obj.multiplayer_button_rect, 2
+        screen, COLOR_BUTTON_HOVER, main_menu_button_rects_obj.multiplayer_button_rect, 2
     )  # White border
     screen.blit(multiplayer_button_text, multiplayer_button_text_rect)
 
@@ -250,16 +250,16 @@ def draw_main_menu(
     )
     settings_button_text_rect: pygame.Rect = settings_button_text.get_rect()
     settings_button_text_rect.center = (
-        main_menu_obj.settings_button_rect.x
-        + main_menu_obj.settings_button_rect.width // 2,
-        main_menu_obj.settings_button_rect.y
-        + main_menu_obj.settings_button_rect.height // 2,
+        main_menu_button_rects_obj.settings_button_rect.x
+        + main_menu_button_rects_obj.settings_button_rect.width // 2,
+        main_menu_button_rects_obj.settings_button_rect.y
+        + main_menu_button_rects_obj.settings_button_rect.height // 2,
     )
     pygame.draw.rect(
-        screen, COLOR_BUTTON, main_menu_obj.settings_button_rect
+        screen, COLOR_BUTTON, main_menu_button_rects_obj.settings_button_rect
     )  # Gray button
     pygame.draw.rect(
-        screen, COLOR_BUTTON_HOVER, main_menu_obj.settings_button_rect, 2
+        screen, COLOR_BUTTON_HOVER, main_menu_button_rects_obj.settings_button_rect, 2
     )  # White border
     screen.blit(settings_button_text, settings_button_text_rect)
 
@@ -269,14 +269,14 @@ def draw_main_menu(
     )
     quit_button_text_rect: pygame.Rect = quit_button_text.get_rect()
     quit_button_text_rect.center = (
-        main_menu_obj.quit_button_rect.x + main_menu_obj.quit_button_rect.width // 2,
-        main_menu_obj.quit_button_rect.y + main_menu_obj.quit_button_rect.height // 2,
+        main_menu_button_rects_obj.quit_button_rect.x + main_menu_button_rects_obj.quit_button_rect.width // 2,
+        main_menu_button_rects_obj.quit_button_rect.y + main_menu_button_rects_obj.quit_button_rect.height // 2,
     )
     pygame.draw.rect(
-        screen, COLOR_BUTTON, main_menu_obj.quit_button_rect
+        screen, COLOR_BUTTON, main_menu_button_rects_obj.quit_button_rect
     )  # Gray button
     pygame.draw.rect(
-        screen, COLOR_BUTTON_HOVER, main_menu_obj.quit_button_rect, 2
+        screen, COLOR_BUTTON_HOVER, main_menu_button_rects_obj.quit_button_rect, 2
     )  # White border
     screen.blit(quit_button_text, quit_button_text_rect)
 
@@ -302,18 +302,18 @@ def draw_main_menu(
     match pointer_pos:
         case 0:
             pointer_surface, pointer_rect = draw_pointer(
-                main_menu_obj.single_player_button_rect
+                main_menu_button_rects_obj.single_player_button_rect
             )
         case 1:
             pointer_surface, pointer_rect = draw_pointer(
-                main_menu_obj.multiplayer_button_rect
+                main_menu_button_rects_obj.multiplayer_button_rect
             )
         case 2:
             pointer_surface, pointer_rect = draw_pointer(
-                main_menu_obj.settings_button_rect
+                main_menu_button_rects_obj.settings_button_rect
             )
         case 3:
-            pointer_surface, pointer_rect = draw_pointer(main_menu_obj.quit_button_rect)
+            pointer_surface, pointer_rect = draw_pointer(main_menu_button_rects_obj.quit_button_rect)
         case _:
             raise ValueError("Pointer position must be 0, 1, 2, or 3.")
 
